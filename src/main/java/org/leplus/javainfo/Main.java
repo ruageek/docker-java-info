@@ -4,9 +4,8 @@ import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public final class Main {
@@ -16,11 +15,13 @@ public final class Main {
 	}
 	
 	public static void main(String[] args) {
-		
-		System.out.println("Application arguments = " + Arrays.asList(args).stream().collect(Collectors.joining(" ", "\"", "\"")));
-		
+
+		System.out.println(
+				"Application arguments = " + Arrays.asList(args).stream().collect(Collectors.joining(" ", "\"", "\"")));
+
 		final RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
-		System.out.println("JVM arguments = " + runtimeMXBean.getInputArguments().stream().collect(Collectors.joining(" ", "\"", "\"")));
+		System.out.println("JVM arguments = "
+				+ runtimeMXBean.getInputArguments().stream().collect(Collectors.joining(" ", "\"", "\"")));
 		System.out.println("Boot Class Path = " + runtimeMXBean.getBootClassPath());
 		System.out.println("Class Path = " + runtimeMXBean.getClassPath());
 		System.out.println("Library Path = " + runtimeMXBean.getLibraryPath());
@@ -32,7 +33,7 @@ public final class Main {
 		System.out.println("VM Name = " + runtimeMXBean.getVmName());
 		System.out.println("VM Vendor = " + runtimeMXBean.getVmVendor());
 		System.out.println("VM Version = " + runtimeMXBean.getVmVersion());
-		
+
 		System.out.println();
 		final Runtime runtime = Runtime.getRuntime();
 		System.out.println("Runtime.getRuntime().availableProcessors() = " + runtime.availableProcessors());
@@ -40,7 +41,10 @@ public final class Main {
 		System.out.println("Runtime.getRuntime().freeMemory() = " + format(runtime.freeMemory()));
 		System.out.println("Runtime.getRuntime().totalMemory() = " + format(runtime.totalMemory()));
 		final long maxMemory = runtime.maxMemory();
-		System.out.println("Runtime.getRuntime().maxMemory() = " + (maxMemory == Long.MAX_VALUE ? "unlimited" : format(maxMemory)));
+		System.out.println("Runtime.getRuntime().maxMemory() = "
+				+ (maxMemory == Long.MAX_VALUE ? "unlimited" : format(maxMemory)));
+		
+		// Java 9: look at ProcessHandle.current()
 		
 		final File[] roots = File.listRoots();
 		int i = 0;
@@ -52,15 +56,11 @@ public final class Main {
 			System.out.println("root.getFreeSpace() = " + format(root.getFreeSpace()));
 			System.out.println("root.getTotalSpace() = " + format(root.getTotalSpace()));
 		}
-		
+
 		System.out.println();
 		System.out.println("System Properties:");
-		final Properties systemProps = System.getProperties();
-		final Enumeration<Object> keys = systemProps.keys();
-		while (keys.hasMoreElements()) {
-		    String key = (String) keys.nextElement();
-		    String value = (String) systemProps.get(key);
-		    System.out.println(key + " = \"" + value + "\"");
+		for (Map.Entry<Object, Object> v : new TreeMap<Object, Object>(System.getProperties()).entrySet()) {
+			System.out.println(v.getKey() + " = \"" + v.getValue() + "\"");
 		}
 	}
 
