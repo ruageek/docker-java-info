@@ -1,5 +1,4 @@
-FROM openjdk:8
-MAINTAINER Thomas Leplus <thomas@leplus.org>
+FROM openjdk:8-alpine
 
 ENTRYPOINT ["/usr/bin/java", "-jar", "/usr/share/java-info.jar"]
 
