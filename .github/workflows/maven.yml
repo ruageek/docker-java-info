@@ -28,7 +28,7 @@ jobs:
     - name: Build with Maven
       run: ./mvnw --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true verify
     - name: Scan with SonarCloud
-      if: ${{ matrix.java == 11 && github.token != '' }}
+      if: ${{ matrix.java == 11 && secrets.SONAR_TOKEN != '' }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
